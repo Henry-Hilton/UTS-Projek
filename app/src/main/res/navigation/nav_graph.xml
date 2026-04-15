@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="view.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/actionDashboard"
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="view.DashboardFragment"
+        android:label="My Habits"
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/actionNewHabit"
+            app:destination="@id/newHabitFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/newHabitFragment"
+        android:name="view.NewHabitFragment"
+        android:label="Create New Habit"
+        tools:layout="@layout/fragment_new_habit">
+    </fragment>
+
+</navigation>
