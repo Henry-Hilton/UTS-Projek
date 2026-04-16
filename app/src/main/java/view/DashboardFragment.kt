@@ -12,14 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ubaya.habittracker.databinding.FragmentDashboardBinding
 import viewmodel.HabitViewModel
 
-class DashboardFragment : Fragment() {
+class DashboardFragment : Fragment(), HabitActionListener {
 
     private lateinit var binding: FragmentDashboardBinding
     private lateinit var viewModel: HabitViewModel
-    private val habitAdapter = HabitListAdapter(arrayListOf(),
-        onIncrement = { id -> viewModel.incrementProgress(id) },
-        onDecrement = { id -> viewModel.decrementProgress(id) }
-    )
+    private lateinit var habitAdapter: HabitListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,15 +29,15 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize ViewModel (Week 3)
         viewModel = ViewModelProvider(requireActivity()).get(HabitViewModel::class.java)
         viewModel.loadHabits()
 
-        // Setup RecyclerView
+        // NMP Week 4 — adapter initialized here, after viewModel is ready
+        habitAdapter = HabitListAdapter(ArrayList(), this)
+
         binding.recViewHabits.layoutManager = LinearLayoutManager(context)
         binding.recViewHabits.adapter = habitAdapter
 
-        // FAB → Navigate to New Habit screen (Week 1: SafeArgs navigation)
         binding.fabAddHabit.setOnClickListener {
             val action = DashboardFragmentDirections.actionNewHabit()
             it.findNavController().navigate(action)
@@ -49,6 +46,7 @@ class DashboardFragment : Fragment() {
         observeViewModel()
     }
 
+    // ANMP Week 3 — LiveData Observer
     private fun observeViewModel() {
         viewModel.habitsLD.observe(viewLifecycleOwner, Observer { habits ->
             habitAdapter.updateList(habits)
@@ -60,5 +58,14 @@ class DashboardFragment : Fragment() {
                 binding.recViewHabits.visibility = View.VISIBLE
             }
         })
+    }
+
+    // NMP Week 1 — HabitActionListener interface implementation
+    override fun onIncrement(habitId: Int) {
+        viewModel.incrementProgress(habitId)
+    }
+
+    override fun onDecrement(habitId: Int) {
+        viewModel.decrementProgress(habitId)
     }
 }

@@ -12,10 +12,14 @@ class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
 
-    // Hardcoded credentials (as per project requirement)
-    private val VALID_USERNAME = "student"
-    private val VALID_PASSWORD = "123"
+    // NMP Week 3 - companion object for constants
+    // avoids hardcoded strings scattered around the class
+    companion object {
+        const val VALID_USERNAME = "student"
+        const val VALID_PASSWORD = "123"
+    }
 
+    // ANMP Week 1 - ViewBinding in Fragment (onCreateView pattern)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,21 +31,32 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // NMP Week 2 - setOnClickListener
         binding.btnLogin.setOnClickListener {
+
+            // NMP Week 6 - EditText .text.toString()
             val username = binding.txtUsername.text.toString().trim()
             val password = binding.txtPassword.text.toString().trim()
 
             if (username == VALID_USERNAME && password == VALID_PASSWORD) {
-                // Navigate to Dashboard, remove Login from backstack (Week 2: popUpTo)
+                // ANMP Week 1 - SafeArgs navigation
+                // ANMP Week 2 - popUpTo + popUpToInclusive defined in nav_graph
+                // ensures login is removed from backstack after navigating
                 val action = LoginFragmentDirections.actionDashboard()
                 it.findNavController().navigate(action)
             } else {
+                // NMP Week 5 - View.VISIBLE / View.GONE
                 binding.txtError.visibility = View.VISIBLE
             }
         }
 
-        // Hide error when user starts typing again
-        binding.txtUsername.setOnFocusChangeListener { _, _ -> binding.txtError.visibility = View.GONE }
-        binding.txtPassword.setOnFocusChangeListener { _, _ -> binding.txtError.visibility = View.GONE }
+        // NMP Week 2 - listener pattern
+        // hides error message when user starts typing again
+        binding.txtUsername.setOnFocusChangeListener { view, hasFocus ->
+            binding.txtError.visibility = View.GONE
+        }
+        binding.txtPassword.setOnFocusChangeListener { view, hasFocus ->
+            binding.txtError.visibility = View.GONE
+        }
     }
 }

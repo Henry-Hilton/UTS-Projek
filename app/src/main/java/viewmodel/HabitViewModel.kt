@@ -6,10 +6,10 @@ import model.Habit
 
 class HabitViewModel : ViewModel() {
 
-    // LiveData observed by DashboardFragment
+    // ANMP Week 3 - MutableLiveData observed by DashboardFragment
     val habitsLD = MutableLiveData<ArrayList<Habit>>()
 
-    // Internal list stored in ViewModel (survives config changes)
+    // internal list stored in ViewModel (survives config changes)
     private val habitList = ArrayList<Habit>()
     private var nextId = 1
 
@@ -18,24 +18,37 @@ class HabitViewModel : ViewModel() {
     }
 
     fun addHabit(habit: Habit) {
-        habit.id = nextId++
+        habit.id = nextId
+        nextId = nextId + 1
         habitList.add(habit)
-        habitsLD.value = habitList   // notify observers
+
+        // ANMP Week 3 - notify observers by updating LiveData
+        habitsLD.value = habitList
     }
 
     fun incrementProgress(habitId: Int) {
-        val habit = habitList.find { it.id == habitId } ?: return
-        if (habit.progress < habit.goal) {
-            habit.progress++
-            habitsLD.value = habitList
+        // NMP Week 1 - for loop to find habit by id
+        for (habit in habitList) {
+            if (habit.id == habitId) {
+                if (habit.progress < habit.goal) {
+                    habit.progress = habit.progress + 1
+                    habitsLD.value = habitList
+                }
+                break
+            }
         }
     }
 
     fun decrementProgress(habitId: Int) {
-        val habit = habitList.find { it.id == habitId } ?: return
-        if (habit.progress > 0) {
-            habit.progress--
-            habitsLD.value = habitList
+        // NMP Week 1 - for loop to find habit by id
+        for (habit in habitList) {
+            if (habit.id == habitId) {
+                if (habit.progress > 0) {
+                    habit.progress = habit.progress - 1
+                    habitsLD.value = habitList
+                }
+                break
+            }
         }
     }
 }
